@@ -1,0 +1,47 @@
+@import '../../../variables.sass'
+
+.control-bar
+    .control-bar-row
+        margin-left: 0
+        margin-right: 0
+
+    .control-bar-content
+        display: flex
+        padding: .25em
+        border-bottom: 2px solid $borderGrey
+        background-color: white
+        margin-bottom: 1em
+
+    .button-add
+        margin-left: 1em
+
+    .control-bar-search
+        margin: auto
+        .p-inputgroup-addon
+            height: 33px
+            padding-top: 5px
+            background-color: $buttonSecondary
+
+        .p-inputtext
+            height: 33px
+            color: $buttonSecondaryFont
+
+    .dropdown-button
+        margin-right: 1em
+
+    .dropdown-content
+        display: none
+        position: absolute
+        top: 33px
+        right: 14px
+        background-color: #f4f4f4
+        border-radius: 3px
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2)
+        z-index: 1
+
+    .show
+        display: block
+
+    .dropdown-content-item
+        margin-left: 0
+        width: 100%

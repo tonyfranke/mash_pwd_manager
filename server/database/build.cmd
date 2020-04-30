@@ -1,0 +1,1 @@
+docker build -t pwd_manager_mysql -f .\Dockerfile .

@@ -1,0 +1,12 @@
+version: '2'
+services:
+  mysql:
+    image: pwd_manager_mysql:latest
+    container_name: pwd_manager_mysql_container
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=toor
+    # peristent volume
+    volumes:
+      - ./mysql:/var/lib/mysql
