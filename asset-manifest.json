@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/mash_pwd_manager/static/css/main.a5b18714.chunk.css",
+    "main.js": "/mash_pwd_manager/static/js/main.c28eeed7.chunk.js",
+    "main.js.map": "/mash_pwd_manager/static/js/main.c28eeed7.chunk.js.map",
+    "runtime-main.js": "/mash_pwd_manager/static/js/runtime-main.8cb74cd1.js",
+    "runtime-main.js.map": "/mash_pwd_manager/static/js/runtime-main.8cb74cd1.js.map",
+    "static/css/2.4903ca4c.chunk.css": "/mash_pwd_manager/static/css/2.4903ca4c.chunk.css",
+    "static/js/2.1ff2738a.chunk.js": "/mash_pwd_manager/static/js/2.1ff2738a.chunk.js",
+    "static/js/2.1ff2738a.chunk.js.map": "/mash_pwd_manager/static/js/2.1ff2738a.chunk.js.map",
+    "index.html": "/mash_pwd_manager/index.html",
+    "precache-manifest.a6c0ad4dac96f455ccd5807d8a311621.js": "/mash_pwd_manager/precache-manifest.a6c0ad4dac96f455ccd5807d8a311621.js",
+    "service-worker.js": "/mash_pwd_manager/service-worker.js",
+    "static/css/2.4903ca4c.chunk.css.map": "/mash_pwd_manager/static/css/2.4903ca4c.chunk.css.map",
+    "static/css/main.a5b18714.chunk.css.map": "/mash_pwd_manager/static/css/main.a5b18714.chunk.css.map",
+    "static/js/2.1ff2738a.chunk.js.LICENSE.txt": "/mash_pwd_manager/static/js/2.1ff2738a.chunk.js.LICENSE.txt",
+    "static/media/primereact.min.css": "/mash_pwd_manager/static/media/line.567f5738.gif",
+    "static/media/theme.css": "/mash_pwd_manager/static/media/open-sans-v15-latin-regular.cffb686d.woff2",
+    "static/media/primeicons.css": "/mash_pwd_manager/static/media/primeicons.e5e0e944.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8cb74cd1.js",
+    "static/css/2.4903ca4c.chunk.css",
+    "static/js/2.1ff2738a.chunk.js",
+    "static/css/main.a5b18714.chunk.css",
+    "static/js/main.c28eeed7.chunk.js"
+  ]
+}
