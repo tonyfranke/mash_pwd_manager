@@ -4,7 +4,7 @@ Mash is a prototype that is based upon our master password hashing method. Furth
 
 Mash supports the storing of password parameters and calculation of service passwords using these parameters and the user’s master password. Passwords are always calculated on demand. Mash only stores non-critical password parameters, like the domain name, the length of the password, the version number of the password, and information about the character types that are used to construct the password. These parameters can be stored either locally inside the browser of the user or serverside inside a MySQL database.
 
-Mash was created as a single page application using the React framework. Therefore password calculation is done by the client's computer. The calculated service passwords and the master password of the user are never transmitted to the server that distributes the app.
+Mash was created as a single page application using the React framework. Therefore password calculation is done on the client's computer. The calculated service passwords and the master password of the user are never transmitted to the server that distributes the app.
 
 A demo of the prototype is available through the following GitHub Pages link: \
 https://tonyfranke.github.io/mash_pwd_manager/ \
