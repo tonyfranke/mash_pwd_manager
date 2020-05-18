@@ -6,7 +6,7 @@ Mash supports the storing of password parameters and calculation of service pass
 
 Mash was created as a single page application using the React framework. Therefore password calculation is done by the client computer. The calculated service passwords and the master password of the user are never transmitted to the server that distributes the app.
 
-A demo of the prototype is available through the following GitHub Pages link:\ 
+A demo of the prototype is available through the following GitHub Pages link: \
 https://tonyfranke.github.io/mash_pwd_manager/ \
 The demo version only contains the Offline mode, which means password parameters can only be stored inside the browsers IndexedDB. The prototype currently only supports Chrome, Firefox, and Safari.
 
