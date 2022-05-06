@@ -1,28 +1,28 @@
 {
   "files": {
-    "main.css": "/mash_pwd_manager/static/css/main.a5b18714.chunk.css",
-    "main.js": "/mash_pwd_manager/static/js/main.c28eeed7.chunk.js",
-    "main.js.map": "/mash_pwd_manager/static/js/main.c28eeed7.chunk.js.map",
+    "main.css": "/mash_pwd_manager/static/css/main.2e3f299e.chunk.css",
+    "main.js": "/mash_pwd_manager/static/js/main.054ffc9f.chunk.js",
+    "main.js.map": "/mash_pwd_manager/static/js/main.054ffc9f.chunk.js.map",
     "runtime-main.js": "/mash_pwd_manager/static/js/runtime-main.8cb74cd1.js",
     "runtime-main.js.map": "/mash_pwd_manager/static/js/runtime-main.8cb74cd1.js.map",
-    "static/css/2.4903ca4c.chunk.css": "/mash_pwd_manager/static/css/2.4903ca4c.chunk.css",
-    "static/js/2.1ff2738a.chunk.js": "/mash_pwd_manager/static/js/2.1ff2738a.chunk.js",
-    "static/js/2.1ff2738a.chunk.js.map": "/mash_pwd_manager/static/js/2.1ff2738a.chunk.js.map",
+    "static/css/2.e8398408.chunk.css": "/mash_pwd_manager/static/css/2.e8398408.chunk.css",
+    "static/js/2.502b7302.chunk.js": "/mash_pwd_manager/static/js/2.502b7302.chunk.js",
+    "static/js/2.502b7302.chunk.js.map": "/mash_pwd_manager/static/js/2.502b7302.chunk.js.map",
     "index.html": "/mash_pwd_manager/index.html",
-    "precache-manifest.a6c0ad4dac96f455ccd5807d8a311621.js": "/mash_pwd_manager/precache-manifest.a6c0ad4dac96f455ccd5807d8a311621.js",
+    "precache-manifest.6f78c915f0937b37b017deb253fa9c33.js": "/mash_pwd_manager/precache-manifest.6f78c915f0937b37b017deb253fa9c33.js",
     "service-worker.js": "/mash_pwd_manager/service-worker.js",
-    "static/css/2.4903ca4c.chunk.css.map": "/mash_pwd_manager/static/css/2.4903ca4c.chunk.css.map",
-    "static/css/main.a5b18714.chunk.css.map": "/mash_pwd_manager/static/css/main.a5b18714.chunk.css.map",
-    "static/js/2.1ff2738a.chunk.js.LICENSE.txt": "/mash_pwd_manager/static/js/2.1ff2738a.chunk.js.LICENSE.txt",
+    "static/css/2.e8398408.chunk.css.map": "/mash_pwd_manager/static/css/2.e8398408.chunk.css.map",
+    "static/css/main.2e3f299e.chunk.css.map": "/mash_pwd_manager/static/css/main.2e3f299e.chunk.css.map",
+    "static/js/2.502b7302.chunk.js.LICENSE.txt": "/mash_pwd_manager/static/js/2.502b7302.chunk.js.LICENSE.txt",
     "static/media/primereact.min.css": "/mash_pwd_manager/static/media/line.567f5738.gif",
     "static/media/theme.css": "/mash_pwd_manager/static/media/open-sans-v15-latin-regular.cffb686d.woff2",
     "static/media/primeicons.css": "/mash_pwd_manager/static/media/primeicons.e5e0e944.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.8cb74cd1.js",
-    "static/css/2.4903ca4c.chunk.css",
-    "static/js/2.1ff2738a.chunk.js",
-    "static/css/main.a5b18714.chunk.css",
-    "static/js/main.c28eeed7.chunk.js"
+    "static/css/2.e8398408.chunk.css",
+    "static/js/2.502b7302.chunk.js",
+    "static/css/main.2e3f299e.chunk.css",
+    "static/js/main.054ffc9f.chunk.js"
   ]
 }
