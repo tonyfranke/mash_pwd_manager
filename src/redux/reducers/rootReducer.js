@@ -1,4 +1,4 @@
-import { LOGIN_USER, UPDATE_USER_PROOF, LOGOUT_USER, CHANGE_SERVICE, ADD_SERVICE, DELETE_SERVICE, SET_SERVICES, SHOW_MESSAGE, FILTER_SERVICES } from '../constants/action-types'
+import { LOGIN_USER, UPDATE_USER_PROOF, LOGOUT_USER, CHANGE_SERVICE, ADD_SERVICE, DELETE_SERVICE, SET_SERVICES, SHOW_MESSAGE, FILTER_SERVICES, SORT_SERVICES } from '../constants/action-types'
 
 
 const initState = {
@@ -36,7 +36,6 @@ function rootReducer(state = initState, action) {
       }
 
     case UPDATE_USER_PROOF:
-      console.log('reducer:', action.payload)
       return Object.assign({}, state, {
         user: {
           ...state.user,
@@ -119,6 +118,29 @@ function rootReducer(state = initState, action) {
       user = { ...state.user };
       services = [...state.services];
       displayedServices = action.payload;
+      messages = { ...state.messages };
+
+      return {
+        user,
+        services,
+        displayedServices,
+        messages
+      }
+
+    case SORT_SERVICES:
+      user = { ...state.user };
+      services = [...state.services];
+      displayedServices = [...state.displayedServices];
+      displayedServices.sort((a, b) => {
+        if (a.name.toLowerCase() < b.name.toLowerCase())  return 1
+        if (a.name.toLowerCase() > b.name.toLowerCase())  return -1
+        return 0
+      })
+
+      if (action.payload === 1) {
+        displayedServices.reverse()
+      }
+
       messages = { ...state.messages };
 
       return {

@@ -1,5 +1,5 @@
 import { LOGIN_USER, UPDATE_USER_PROOF, LOGOUT_USER, ADD_SERVICE, CHANGE_SERVICE, DELETE_SERVICE,
-    SET_SERVICES, FILTER_SERVICES, SHOW_MESSAGE } from '../constants/action-types'
+    SET_SERVICES, FILTER_SERVICES, SORT_SERVICES, SHOW_MESSAGE } from '../constants/action-types'
 
 export function loginUser(payload) {
     return { type: LOGIN_USER, payload }
@@ -35,4 +35,8 @@ export function filterServices(payload) {
 
 export function showMessage(payload) {
     return { type: SHOW_MESSAGE, payload }
+}
+
+export function sortServices(payload) {
+    return { type: SORT_SERVICES, payload }
 }

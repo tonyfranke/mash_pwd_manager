@@ -152,6 +152,7 @@ class ServiceCard extends React.Component {
 
     if (password) {
       this.setState({ password: password });
+      this.handleCopyToClipboard()
     } else {
       console.error('error');
     }
@@ -206,18 +207,20 @@ class ServiceCard extends React.Component {
 
   render() {
     return (
-      <div className="serviceCard-container" onContextMenu={(e) => this.cm.show(e)}>
+      <div className="service-card-container" onContextMenu={(e) => this.cm.show(e)}>
         {/* <div className="service-card-container d-inline"> */}
         <Card title={this.props.service.name} footer={this.footer} className="service-card">
           {this.props.service.account === '' ?
             <p className="service-card-account service-card-account-hidden">placeholder</p>
             : <p className="service-card-account">{this.props.service.account}</p>}
-          <InputText readOnly className="servicePasswordInputText" type={this.state.inputType} value={this.state.password} />
-          <Button label="Calculate" onClick={this.handleGeneratePassword} />
-          <Button icon={this.state.showButtonIcon} onClick={this.handleChangeInputType} tooltip={this.state.inputTypeIsPassword ? 'Show Password' : 'Hide Password'} 
-            tooltipOptions={defaultTooltipOptions} />
-          <Button icon={this.state.copyButtonIcon} onClick={this.handleCopyToClipboard} tooltip={'Copy Password'} tooltipOptions={defaultTooltipOptions} />
-          <Button icon="pi pi-times" onClick={this.handleClearPassword} tooltip={'Clear Password'} tooltipOptions={defaultTooltipOptions} />
+          <InputText readOnly className="service-password-input-text" type={this.state.inputType} value={this.state.password} />
+          <div className="service-card-button-container">
+            <Button label="Generate" onClick={this.handleGeneratePassword} />
+            <Button icon={this.state.showButtonIcon} onClick={this.handleChangeInputType} tooltip={this.state.inputTypeIsPassword ? 'Show Password' : 'Hide Password'} 
+              tooltipOptions={defaultTooltipOptions} />
+            <Button icon={this.state.copyButtonIcon} onClick={this.handleCopyToClipboard} tooltip={'Copy Password'} tooltipOptions={defaultTooltipOptions} />
+            <Button icon="pi pi-times" onClick={this.handleClearPassword} tooltip={'Clear Password'} tooltipOptions={defaultTooltipOptions} />
+          </div>
         </Card>
         <ContextMenu model={this.state.items} ref={el => this.cm = el}></ContextMenu>
         {(this.state.serviceDetailsVisible) ? /* Conditional rendering of the Dialog */

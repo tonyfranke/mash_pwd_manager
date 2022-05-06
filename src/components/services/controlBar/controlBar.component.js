@@ -3,7 +3,7 @@ import './controlBar.component.sass';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { connect } from 'react-redux';
-import { addService, filterServices, showMessage } from '../../../redux/actions';
+import { addService, filterServices, showMessage, sortServices } from '../../../redux/actions';
 import { exportServices, readFile } from '../../../utilities/import-export.service';
 import { defaultTooltipOptions } from '../../../utilities/defaultTooltipOptions.service';
 import { storeService } from '../../../utilities/indexeddb.service';
@@ -19,6 +19,7 @@ class ControlBar extends React.Component {
 
     this.state = {
       keyword: '',
+      sortDir: 1
     }
   }
 
@@ -104,6 +105,16 @@ class ControlBar extends React.Component {
     this.toggleDropdownMenu();
   }
 
+  sortDisplayedServices = () => {
+    if (this.state.sortDir === 0 || this.state.sortDir === -1) {
+      this.props.sortServices(1)
+      this.state.sortDir = 1
+    } else if (this.state.sortDir === 1){
+      this.props.sortServices(-1)
+      this.state.sortDir = -1
+    }
+  }
+
   handleClickOutsideDropdown = (event) => {
     if (!event.target.parentElement || (!event.target.parentElement.matches('.dropdown-button')
       && !event.target.parentElement.matches('.dropdown-content-item'))) {
@@ -131,6 +142,7 @@ class ControlBar extends React.Component {
               <span className="p-inputgroup-addon"><i className="pi pi-search"></i></span>
               <InputText type="text" value={this.state.keyword} name="keyword" onChange={this.handleInputTextChanges} placeholder="Keyword" />
             </div>
+            <Button icon="pi pi-sort-alt" className="p-button-secondary dropdown-button" onClick={this.sortDisplayedServices} />
             <div className="dropdown">
               <Button icon="pi pi-arrow-down" className="p-button-secondary dropdown-button" onClick={this.toggleDropdownMenu} />
               <div ref={this.dropdownContent} className="dropdown-content">
@@ -167,6 +179,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     addService: service => dispatch(addService(service)),
     filterServices: services => dispatch(filterServices(services)),
+    sortServices: sortDir => dispatch(sortServices(sortDir)),
     showMessage: content => dispatch(showMessage(content))
   }
 }

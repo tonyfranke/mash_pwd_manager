@@ -4,7 +4,7 @@ import { InputText } from "primereact/inputtext";
 import { Button } from 'primereact/button';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { loginUser, setServices } from '../../redux/actions/index';
+import { loginUser, setServices, sortServices } from '../../redux/actions/index';
 import { openDatabase, readServices, setDatabase } from '../../utilities/indexeddb.service';
 
 class Password extends React.Component {
@@ -46,6 +46,7 @@ class Password extends React.Component {
           this.props.setServices(services);
 
           this.setState({ password: '' });
+          this.props.sortServices(1)
           this.props.hideModal('passwordDialogVisible');
           this.props.history.push('/services');
         }
@@ -83,7 +84,8 @@ class Password extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     loginUser: user => dispatch(loginUser(user)),
-    setServices: services => dispatch(setServices(services))
+    setServices: services => dispatch(setServices(services)),
+    sortServices: sortDir => dispatch(sortServices(sortDir))
   }
 }
 

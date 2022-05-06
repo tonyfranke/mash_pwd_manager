@@ -7,7 +7,7 @@ import * as axios from 'axios';
 import * as crypto from 'crypto';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { loginUser, addService, showMessage } from '../../redux/actions/index';
+import { loginUser, addService, showMessage, sortServices } from '../../redux/actions/index';
 import { whitelist } from '../../utilities/constants';
 
 class Login extends React.Component {
@@ -29,10 +29,6 @@ class Login extends React.Component {
   };
 
   login = async () => {
-
-    console.log(process.env.NODE_ENV);
-
-    console.log(process.env.NODE_ENV === 'development' ? '/login' : 'http://localhost/login');
 
     if (this.state.username !== '' && this.state.password !== '') {
       try {
@@ -64,8 +60,6 @@ class Login extends React.Component {
             { headers: { 'Content-Type': 'application/json' } }
           )
 
-          console.log(responseStepTwo.data)
-
           if (responseStepTwo && responseStepTwo.data && responseStepTwo.data.stepTwoComplete) {
 
             srp.verifySession(clientEphemeral.public, clientSession, responseStepTwo.data.serverSessionProof);
@@ -92,6 +86,7 @@ class Login extends React.Component {
 
             this.setState({ username: '', password: '' });
             this.props.hideModal('loginVisible');
+            this.props.sortServices(1)
             this.props.history.push('/services');
             this.props.showMessage({ severity: 'success', summary: 'Success', detail: 'Login successful!' });
           } else {
@@ -156,6 +151,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     loginUser: user => dispatch(loginUser(user)),
     addService: service => dispatch(addService(service)),
+    sortServices: sortDir => dispatch(sortServices(sortDir)),
     showMessage: content => dispatch(showMessage(content))
   }
 }
