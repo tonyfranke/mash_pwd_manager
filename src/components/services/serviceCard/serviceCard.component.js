@@ -29,109 +29,47 @@ class ServiceCard extends React.Component {
       favoriteButtonIcon: this.props.service.isFavorite ? 'pi pi-star' : 'pi pi-star-o',
       serviceDetailsVisible: false,
       serviceDeleteVisible: false,
+      items: [
+        {
+          label: 'Generate',
+          icon: 'pi pi-fw pi-external-link',
+          command: this.handleGeneratePassword
+        },
+        {
+          label: 'Show Password',
+          icon: 'pi pi-fw pi-eye',
+          command: this.handleChangeInputType
+        },
+        {
+          label: 'Copy',
+          icon: 'pi pi-fw pi-copy',
+          command: this.handleCopyToClipboard
+        },
+        {
+          label: 'Edit',
+          icon: 'pi pi-fw pi-cog',
+          command: this.handleEditDialogShow
+        },
+        {
+          separator: true
+        },
+        {
+          label: 'Delete',
+          icon: 'pi pi-fw pi-times',
+          command: this.handleDeleteDialogShow
+        }
+      ]
     }
 
-    // TODO: used for context menu
-    // if (this.props.service.url) {
-    //   this.state = {
-    //     password: '',
-    //     inputType: 'password',
-    //     inputTypeIsPassword: true,
-    //     showButtonIcon: 'pi pi-eye',
-    //     copyButtonIcon: 'pi pi-copy',
-    //     favoriteButtonIcon: this.props.isFavorite ? '' : '',
-    //     serviceDetailsVisible: false,
-    //     isFavorite: false,
-    //     items: [
-    //       {
-    //         label: 'Generate',
-    //         icon: 'pi pi-fw pi-external-link',
-    //         command: this.handleGeneratePassword
-    //       },
-    //       {
-    //         label: 'Show Password',
-    //         icon: 'pi pi-fw pi-eye',
-    //         command: this.handleChangeInputType
-    //       },
-    //       {
-    //         label: 'Copy',
-    //         icon: 'pi pi-fw pi-copy',
-    //         command: this.handleCopyToClipboard
-    //       },
-    //       {
-    //         label: 'Open URL',
-    //         icon: 'pi pi-fw pi-external-link',
-    //         command: this.handleOpenURL
-    //       },
-    //       {
-    //         label: 'Edit',
-    //         icon: 'pi pi-fw pi-cog',
-    //         command: this.handleDialogShow
-    //       },
-    //       {
-    //         separator: true
-    //       },
-    //       {
-    //         label: 'Delete',
-    //         icon: 'pi pi-fw pi-times',
-    //         command: this.props.isOfflineMode ? this.handleDeleteServiceOffline : this.handleDeleteService
-    //       },
-    //       {
-    //         label: 'Favorite',
-    //         icon: 'pi pi-star-o',
-    //         command: this.makeFavorite
-    //       }
-    //     ]
-    //   };
-    // } else {
-    //   this.state = {
-    //     password: '',
-    //     inputType: 'password',
-    //     inputTypeIsPassword: true,
-    //     showButtonIcon: 'pi pi-eye',
-    //     copyButtonIcon: 'pi pi-copy',
-    //     favoriteButtonIcon: 'pi pi-star-o',
-    //     serviceDetailsVisible: false,
-    //     isFavorite: false,
-    //     items: [
-    //       {
-    //         label: 'Generate',
-    //         icon: 'pi pi-fw pi-external-link',
-    //         command: this.handleGeneratePassword
-    //       },
-    //       {
-    //         label: 'Show Password',
-    //         icon: 'pi pi-fw pi-eye',
-    //         command: this.handleChangeInputType
-    //       },
-    //       {
-    //         label: 'Copy',
-    //         icon: 'pi pi-fw pi-copy',
-    //         command: this.handleCopyToClipboard
-    //       },
-    //       {
-    //         label: 'Edit',
-    //         icon: 'pi pi-fw pi-cog',
-    //         command: this.handleDialogShow
-    //       },
-    //       {
-    //         separator: true
-    //       },
-    //       {
-    //         label: 'Delete',
-    //         icon: 'pi pi-fw pi-times',
-    //         command: this.props.isOfflineMode ? this.handleDeleteServiceOffline : this.handleDeleteService
-    //       },
-    //       {
-    //         label: 'Favorite',
-    //         icon: 'pi pi-star-o',
-    //         command: this.makeFavorite
-    //       }
-    //     ]
-    //   };
-    // }
+    if (this.props.service.url) {
+      let urlObject = {
+        label: 'Open URL',
+        icon: 'pi pi-fw pi-external-link',
+        command: this.handleOpenURL
+      }
 
-
+      this.state.items.splice(3, 0, urlObject)
+    }
   }
 
   handleEditDialogShow = () => {
@@ -166,22 +104,22 @@ class ServiceCard extends React.Component {
       this.setState({ inputType: 'text' });
       this.setState({ showButtonIcon: 'pi pi-eye-slash' });
       this.setState({ inputTypeIsPassword: false });
-      // this.setState(prevState => {
-      //   const newState = { ...prevState };
-      //   newState.items[1].label = 'Hide Password';
-      //   newState.items[1].icon = 'pi pi-eye-slash';
-      //   return newState;
-      // });
+      this.setState(prevState => {
+        const newState = { ...prevState };
+        newState.items[1].label = 'Hide Password';
+        newState.items[1].icon = 'pi pi-eye-slash';
+        return newState;
+      });
     } else {
       this.setState({ inputType: 'password' });
       this.setState({ showButtonIcon: 'pi pi-eye' });
       this.setState({ inputTypeIsPassword: true });
-      // this.setState(prevState => {
-      //   const newState = { ...prevState };
-      //   newState.items[1].label = 'Show Password';
-      //   newState.items[1].icon = 'pi pi-eye';
-      //   return newState;
-      // });
+      this.setState(prevState => {
+        const newState = { ...prevState };
+        newState.items[1].label = 'Show Password';
+        newState.items[1].icon = 'pi pi-eye';
+        return newState;
+      });
     }
   }
 
