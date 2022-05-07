@@ -55,7 +55,6 @@ function rootReducer(state = initState, action) {
     case CHANGE_SERVICE:
       user = { ...state.user };
       services = [...state.services];
-      displayedServices = []
       displayedServices = [...state.displayedServices];
       messages = { ...state.messages };
       

@@ -58,7 +58,7 @@ class ControlBar extends React.Component {
       delete services[0].id
       for (const service of services) {
         // send request to server
-        const response = await sendPostRequest(process.env.NODE_ENV === 'production' ? '/service/save' : 'http://localhost:4500/service/save', 
+        const response = await sendPostRequest(process.env.NODE_ENV === 'production' ? '/service/save' : 'http://localhost:4500/service/save',
           {
             username: this.props.username,
             ...service,
@@ -108,10 +108,10 @@ class ControlBar extends React.Component {
   sortDisplayedServices = () => {
     if (this.state.sortDir === 0 || this.state.sortDir === -1) {
       this.props.sortServices(1)
-      this.state.sortDir = 1
-    } else if (this.state.sortDir === 1){
+      this.state.setState({ sortDir: 1 })
+    } else if (this.state.sortDir === 1) {
       this.props.sortServices(-1)
-      this.state.sortDir = -1
+      this.state.setState({ sortDir: -1 })
     }
   }
 

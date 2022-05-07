@@ -6,12 +6,13 @@ import { Button } from 'primereact/button';
 import { ContextMenu } from 'primereact/contextmenu';
 import { Dialog } from 'primereact/dialog';
 import ServiceDetails from '../serviceDetails/serviceDetails.component';
-import { deleteService, changeService, showMessage } from '../../../redux/actions/index';
+import { changeService, showMessage } from '../../../redux/actions/index';
 import { InputText } from 'primereact/inputtext';
 import { calculatePassword } from '../../../utilities/calculatePassword.service';
-import * as axios from 'axios';
-import { deleteService as deleteServiceIndexedDB, storeService } from '../../../utilities/indexeddb.service';
+import { storeService } from '../../../utilities/indexeddb.service';
 import { defaultTooltipOptions } from '../../../utilities/defaultTooltipOptions.service';
+import { sendPostRequest } from '../../../utilities/request.service'
+import ServiceDelete from '../serviceDelete/serviceDelete.component';
 
 class ServiceCard extends React.Component {
 
@@ -26,10 +27,11 @@ class ServiceCard extends React.Component {
       copyButtonIcon: 'pi pi-copy',
       isFavorite: this.props.service.isFavorite,
       favoriteButtonIcon: this.props.service.isFavorite ? 'pi pi-star' : 'pi pi-star-o',
-      serviceDetailsVisible: false
+      serviceDetailsVisible: false,
+      serviceDeleteVisible: false,
     }
 
-    // TODO: remove if, currently not used for anything
+    // TODO: used for context menu
     // if (this.props.service.url) {
     //   this.state = {
     //     password: '',
@@ -128,49 +130,24 @@ class ServiceCard extends React.Component {
     //     ]
     //   };
     // }
+
+
   }
 
-  handleDialogShow = () => {
+  handleEditDialogShow = () => {
     this.setState({ serviceDetailsVisible: true });
   }
 
-  handleDialogHide = () => {
+  handleEditDialogHide = () => {
     this.setState({ serviceDetailsVisible: false });
   }
 
-  handleDeleteService = async () => {
-    try {
-      const response = await axios.post(
-        process.env.NODE_ENV === 'production' ? '/service/delete' : 'http://localhost:4500/service/delete',
-        {
-          username: this.props.username,
-          ...this.props.service,
-          delete: true,
-          clientSessionProof: this.props.clientSessionProof
-        },
-        { headers: { 'Content-Type': 'application/json' } }
-      )
-
-      if (response && response.data && response.data.deleted) {
-        this.props.deleteService(this.props.service);
-        this.props.showMessage({ severity: 'success', summary: 'Sucess', detail: 'Service deleted.' });
-      } else {
-        this.props.showMessage({ severity: 'error', summary: 'Error', detail: 'Service could not be deleted.' });
-      }
-    } catch (e) {
-      this.props.showMessage({ severity: 'error', summary: 'Error', detail: 'Internal Server Error.' });
-    }
+  handleDeleteDialogShow = () => {
+    this.setState({ serviceDeleteVisible: true });
   }
 
-  handleDeleteServiceOffline = async () => {
-    try {
-      await deleteServiceIndexedDB(this.props.service.id);
-      this.props.deleteService(this.props.service);
-      this.props.showMessage({ severity: 'success', summary: 'Sucess', detail: 'Service deleted.' });
-    } catch (error) {
-      this.props.showMessage({ severity: 'error', summary: 'Error', detail: 'Service could not be deleted.' });
-    }
-
+  handleDeleteDialogHide = () => {
+    this.setState({ serviceDeleteVisible: false });
   }
 
   handleGeneratePassword = async () => {
@@ -189,22 +166,22 @@ class ServiceCard extends React.Component {
       this.setState({ inputType: 'text' });
       this.setState({ showButtonIcon: 'pi pi-eye-slash' });
       this.setState({ inputTypeIsPassword: false });
-      this.setState(prevState => {
-        const newState = { ...prevState };
-        newState.items[1].label = 'Hide Password';
-        newState.items[1].icon = 'pi pi-eye-slash';
-        return newState;
-      });
+      // this.setState(prevState => {
+      //   const newState = { ...prevState };
+      //   newState.items[1].label = 'Hide Password';
+      //   newState.items[1].icon = 'pi pi-eye-slash';
+      //   return newState;
+      // });
     } else {
       this.setState({ inputType: 'password' });
       this.setState({ showButtonIcon: 'pi pi-eye' });
       this.setState({ inputTypeIsPassword: true });
-      this.setState(prevState => {
-        const newState = { ...prevState };
-        newState.items[1].label = 'Show Password';
-        newState.items[1].icon = 'pi pi-eye';
-        return newState;
-      });
+      // this.setState(prevState => {
+      //   const newState = { ...prevState };
+      //   newState.items[1].label = 'Show Password';
+      //   newState.items[1].icon = 'pi pi-eye';
+      //   return newState;
+      // });
     }
   }
 
@@ -225,7 +202,6 @@ class ServiceCard extends React.Component {
     this.setState({ password: '' })
   }
 
-  // TODO: Online changeService
   makeFavorite = async () => {
     try {
       if (this.state.isFavorite) {
@@ -238,60 +214,34 @@ class ServiceCard extends React.Component {
         this.props.service.isFavorite = true
       }
 
-      
+
       if (this.props.isOfflineMode) {
         await storeService(this.props.service)
         this.props.changeService(this.props.service)
         this.props.showMessage({ severity: 'success', summary: 'Success', detail: 'Service changed!' });
       } else {
-        const response = await this.sendSaveRequest(false);
-        console.log(response)
+        let body = {
+          username: this.props.username,
+          ...this.props.service,
+          newService: false,
+          clientSessionProof: this.props.clientSessionProof
+        }
+        const response = await sendPostRequest('/service/save', body);
 
-        if (response && response.saved) {
+        if (response && response.data && response.data.saved) {
           this.props.changeService(this.props.service)
           this.props.showMessage({ severity: 'success', summary: 'Success', detail: 'Service changed!' });
-        } else {
-          this.props.showMessage({ severity: 'error', summary: 'Error', detail: 'Service could not be changed!' });
         }
       }
     } catch (error) {
       console.error(error)
+      this.props.showMessage({ severity: 'error', summary: 'Error', detail: 'Service could not be changed!' });
     }
   }
 
-  // TODO: create utility file
-  sendSaveRequest = async (newService) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const response = await axios.post(
-          process.env.NODE_ENV === 'production' ? '/service/save' : 'http://localhost:4500/service/save',
-          {
-            username: this.props.username,
-            ...this.props.service,
-            newService: newService,
-            clientSessionProof: this.props.clientSessionProof
-          },
-          { headers: { 'Content-Type': 'application/json' } }
-        )
-
-        if (response && response.data && response.data.saved) {
-          console.log(response.data)
-          resolve(response.data);
-        } else {
-          resolve(false);
-        }
-      } catch (e) {
-        resolve(e);
-      }
-    });
-  }
-
   footer = <span>
-    <Button icon="pi pi-cog" style={{ marginRight: '.25em' }} onClick={this.handleDialogShow} tooltip="Edit Service" tooltipOptions={defaultTooltipOptions} />
-    <Button icon="pi pi-trash" className="p-button-secondary" onClick={this.props.isOfflineMode ? this.handleDeleteServiceOffline : this.handleDeleteService}
-      tooltip="Delete Service" tooltipOptions={defaultTooltipOptions} />
-    {/* <Button icon="pi pi-star-o" className="p-button-secondary" onClick={() => console.log(this.state)} /> */}
-
+    <Button icon="pi pi-cog" style={{ marginRight: '.25em' }} onClick={this.handleEditDialogShow} tooltip="Edit Service" tooltipOptions={defaultTooltipOptions} />
+    <Button icon="pi pi-trash" className="p-button-secondary" onClick={this.handleDeleteDialogShow} tooltip="Delete Service" tooltipOptions={defaultTooltipOptions} />
   </span>;
 
   render() {
@@ -304,18 +254,23 @@ class ServiceCard extends React.Component {
             : <p className="service-card-account">{this.props.service.account}</p>}
           <InputText readOnly className="service-password-input-text" type={this.state.inputType} value={this.state.password} />
           <div className="service-card-button-container">
-            <Button label="Generate" onClick={this.handleGeneratePassword} />
+            <Button label="Generate" onClick={this.handleGeneratePassword} className="button-standard" />
             <Button icon={this.state.showButtonIcon} onClick={this.handleChangeInputType} tooltip={this.state.inputTypeIsPassword ? 'Show Password' : 'Hide Password'}
-              tooltipOptions={defaultTooltipOptions} />
-            <Button icon={this.state.copyButtonIcon} onClick={this.handleCopyToClipboard} tooltip={'Copy Password'} tooltipOptions={defaultTooltipOptions} />
-            <Button icon="pi pi-times" onClick={this.handleClearPassword} tooltip={'Clear Password'} tooltipOptions={defaultTooltipOptions} />
-            <Button icon={this.state.favoriteButtonIcon} className="p-button-secondary" onClick={this.makeFavorite} />
+              tooltipOptions={defaultTooltipOptions} className="button-standard" />
+            <Button icon={this.state.copyButtonIcon} onClick={this.handleCopyToClipboard} tooltip={'Copy Password'} tooltipOptions={defaultTooltipOptions} className="button-standard" />
+            <Button icon="pi pi-times" onClick={this.handleClearPassword} tooltip={'Clear Password'} tooltipOptions={defaultTooltipOptions} className="button-standard" />
+            <Button icon={this.state.favoriteButtonIcon} className="p-button-secondary button-favorite" onClick={this.makeFavorite} />
           </div>
         </Card>
         <ContextMenu model={this.state.items} ref={el => this.cm = el}></ContextMenu>
         {(this.state.serviceDetailsVisible) ? /* Conditional rendering of the Dialog */
-          <Dialog header="Edit Service" visible={this.state.serviceDetailsVisible} modal={true} onHide={this.handleDialogHide}>
-            <ServiceDetails service={this.props.service} handleDialogHide={this.handleDialogHide} />
+          <Dialog header="Edit Service" visible={this.state.serviceDetailsVisible} modal={true} onHide={this.handleEditDialogHide}>
+            <ServiceDetails service={this.props.service} handleDialogHide={this.handleEditDialogHide} />
+          </Dialog>
+          : ''}
+        {(this.state.serviceDeleteVisible) ? /* Conditional rendering of the Dialog */
+          <Dialog header="Delete Service" visible={this.state.serviceDeleteVisible} modal={true} onHide={this.handleDeleteDialogHide}>
+            <ServiceDelete service={this.props.service} handleDialogHide={this.handleDeleteDialogHide} />
           </Dialog>
           : ''}
       </div>
@@ -323,12 +278,12 @@ class ServiceCard extends React.Component {
   }
 }
 
+
+
 const mapStateToProps = (state, ownProps) => {
   let service = state.services.find(element => {
     return element.id === ownProps.id;
   });
-
-  console.log(service)
 
   let masterpassword = state.user.password;
   let username = state.user.username;
@@ -346,7 +301,6 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    deleteService: service => dispatch(deleteService(service)),
     changeService: service => dispatch(changeService(service)),
     showMessage: content => dispatch(showMessage(content))
   }
