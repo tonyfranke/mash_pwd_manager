@@ -137,7 +137,6 @@ class ServiceDetails extends React.Component {
 
     try {
       if (this.props.newService) {
-        console.log(this.state)
         this.state.rndBytes = crypto.randomBytes(16).toString('hex');
         const id = await storeService(this.state);
         this.props.addService({ ...this.state, id: id });

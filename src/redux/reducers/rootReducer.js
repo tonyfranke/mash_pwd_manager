@@ -57,16 +57,16 @@ function rootReducer(state = initState, action) {
       services = [...state.services];
       displayedServices = [...state.displayedServices];
       messages = { ...state.messages };
-      
-      let service = services.find((service) => {
+
+      let serviceIndex = services.findIndex((service) => {
         return service.id === action.payload.id
       })
-      service = action.payload
-      
-      let displayedService = displayedServices.find((service) => {
+      services[serviceIndex] = action.payload
+
+      let displayedServiceIndex = displayedServices.findIndex((service) => {
         return service.id === action.payload.id
       })
-      displayedService = action.payload
+      displayedServices[displayedServiceIndex] = action.payload
 
       return {
         user,
@@ -136,8 +136,8 @@ function rootReducer(state = initState, action) {
       services = [...state.services];
       displayedServices = [...state.displayedServices];
       displayedServices.sort((a, b) => {
-        if (a.name.toLowerCase() < b.name.toLowerCase())  return 1
-        if (a.name.toLowerCase() > b.name.toLowerCase())  return -1
+        if (a.name.toLowerCase() < b.name.toLowerCase()) return 1
+        if (a.name.toLowerCase() > b.name.toLowerCase()) return -1
         return 0
       })
 
