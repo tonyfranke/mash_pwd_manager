@@ -245,14 +245,16 @@ class ServiceCard extends React.Component {
         this.props.showMessage({ severity: 'success', summary: 'Success', detail: 'Service changed!' });
       } else {
         const response = await this.sendSaveRequest(false);
+        console.log(response)
 
         if (response && response.saved) {
           this.props.changeService(this.props.service)
           this.props.showMessage({ severity: 'success', summary: 'Success', detail: 'Service changed!' });
+        } else {
+          this.props.showMessage({ severity: 'error', summary: 'Error', detail: 'Service could not be changed!' });
         }
       }
     } catch (error) {
-      this.props.showMessage({ severity: 'error', summary: 'Error', detail: 'Service could not be changed!' });
       console.error(error)
     }
   }
@@ -265,7 +267,7 @@ class ServiceCard extends React.Component {
           process.env.NODE_ENV === 'production' ? '/service/save' : 'http://localhost:4500/service/save',
           {
             username: this.props.username,
-            ...this.state,
+            ...this.props.service,
             newService: newService,
             clientSessionProof: this.props.clientSessionProof
           },
@@ -273,12 +275,13 @@ class ServiceCard extends React.Component {
         )
 
         if (response && response.data && response.data.saved) {
+          console.log(response.data)
           resolve(response.data);
         } else {
-          reject();
+          resolve(false);
         }
       } catch (e) {
-        reject();
+        resolve(e);
       }
     });
   }
@@ -324,6 +327,8 @@ const mapStateToProps = (state, ownProps) => {
   let service = state.services.find(element => {
     return element.id === ownProps.id;
   });
+
+  console.log(service)
 
   let masterpassword = state.user.password;
   let username = state.user.username;

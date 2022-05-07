@@ -80,7 +80,7 @@ module.exports = class ServicesController {
                             numbers = ${req.body.numbers ? 1 : 0}, 
                             specialChars = ${req.body.specialChars ? 1 : 0},
                             blacklist = '${JSON.stringify(req.body.blacklist)}',
-                            isFavorite = ${req.body.length ? 1 : 0}
+                            isFavorite = ${req.body.isFavorite ? 1 : 0}
                             WHERE user_id = ${user[0].id}
                             AND id = ${req.body.id};`);
 
