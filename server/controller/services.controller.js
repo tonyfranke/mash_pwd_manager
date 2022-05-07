@@ -47,10 +47,10 @@ module.exports = class ServicesController {
                         }
 
                         const rows = await sendQuery(`INSERT INTO pwd_parameter 
-                            (user_id, id, name, url, account, version, length, rndBytes, lowercase, uppercase, numbers, specialChars, blacklist) 
+                            (user_id, id, name, url, account, version, length, rndBytes, lowercase, uppercase, numbers, specialChars, blacklist, isFavorite) 
                             VALUES (${user[0].id}, ${req.body.id}, '${req.body.name}', '${req.body.url}',
                             '${req.body.account}', ${req.body.version}, ${req.body.length}, '${req.body.rndBytes}', ${req.body.lowercase ? 1 : 0}, 
-                            ${req.body.uppercase ? 1 : 0}, ${req.body.numbers ? 1 : 0}, ${req.body.specialChars ? 1 : 0}, '${JSON.stringify(req.body.blacklist)}')`);
+                            ${req.body.uppercase ? 1 : 0}, ${req.body.numbers ? 1 : 0}, ${req.body.specialChars ? 1 : 0}, '${JSON.stringify(req.body.blacklist)}', ${req.body.isFavorite ? 1 : 0})`);
 
                         if (rows) {
                             res.json({
@@ -79,7 +79,8 @@ module.exports = class ServicesController {
                             uppercase = ${req.body.uppercase ? 1 : 0},
                             numbers = ${req.body.numbers ? 1 : 0}, 
                             specialChars = ${req.body.specialChars ? 1 : 0},
-                            blacklist = '${JSON.stringify(req.body.blacklist)}'
+                            blacklist = '${JSON.stringify(req.body.blacklist)}',
+                            isFavorite = ${req.body.length ? 1 : 0}
                             WHERE user_id = ${user[0].id}
                             AND id = ${req.body.id};`);
 

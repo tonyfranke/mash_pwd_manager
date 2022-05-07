@@ -68,7 +68,8 @@ export function readServices() {
           numbers: cursor.value.numbers,
           specialChars: cursor.value.specialChars,
           whitelist: cursor.value.whitelist,
-          blacklist: cursor.value.blacklist
+          blacklist: cursor.value.blacklist,
+          isFavorite: cursor.value.isFavorite || false
         };
 
         services.push(service);

@@ -77,6 +77,7 @@ class Login extends React.Component {
               service.uppercase === 1 ? service.uppercase = true : service.uppercase = false;
               service.numbers === 1 ? service.numbers = true : service.numbers = false;
               service.specialChars === 1 ? service.specialChars = true : service.specialChars = false;
+              service.isFavorite === 1 ? service.isFavorite = true: service.isFavorite = false;
               service.whitelist = [...whitelist];
               for (const char of service.blacklist) {
                 service.whitelist.splice(service.whitelist.indexOf(char), 1);

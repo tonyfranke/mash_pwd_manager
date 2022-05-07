@@ -6,11 +6,11 @@ import { Button } from 'primereact/button';
 import { ContextMenu } from 'primereact/contextmenu';
 import { Dialog } from 'primereact/dialog';
 import ServiceDetails from '../serviceDetails/serviceDetails.component';
-import { deleteService, showMessage } from '../../../redux/actions/index';
+import { deleteService, changeService, showMessage } from '../../../redux/actions/index';
 import { InputText } from 'primereact/inputtext';
 import { calculatePassword } from '../../../utilities/calculatePassword.service';
 import * as axios from 'axios';
-import { deleteService as deleteServiceIndexedDB } from '../../../utilities/indexeddb.service';
+import { deleteService as deleteServiceIndexedDB, storeService } from '../../../utilities/indexeddb.service';
 import { defaultTooltipOptions } from '../../../utilities/defaultTooltipOptions.service';
 
 class ServiceCard extends React.Component {
@@ -18,90 +18,116 @@ class ServiceCard extends React.Component {
   constructor(props) {
     super(props);
 
-    if (this.props.service.url) {
-      this.state = {
-        password: '',
-        inputType: 'password',
-        inputTypeIsPassword: true,
-        showButtonIcon: 'pi pi-eye',
-        copyButtonIcon: 'pi pi-copy',
-        serviceDetailsVisible: false,
-        items: [
-          {
-            label: 'Generate',
-            icon: 'pi pi-fw pi-external-link',
-            command: this.handleGeneratePassword
-          },
-          {
-            label: 'Show Password',
-            icon: 'pi pi-fw pi-eye',
-            command: this.handleChangeInputType
-          },
-          {
-            label: 'Copy',
-            icon: 'pi pi-fw pi-copy',
-            command: this.handleCopyToClipboard
-          },
-          {
-            label: 'Open URL',
-            icon: 'pi pi-fw pi-external-link',
-            command: this.handleOpenURL
-          },
-          {
-            label: 'Edit',
-            icon: 'pi pi-fw pi-cog',
-            command: this.handleDialogShow
-          },
-          {
-            separator: true
-          },
-          {
-            label: 'Delete',
-            icon: 'pi pi-fw pi-times',
-            command: this.props.isOfflineMode ? this.handleDeleteServiceOffline : this.handleDeleteService
-          }
-        ]
-      };
-    } else {
-      this.state = {
-        password: '',
-        inputType: 'password',
-        inputTypeIsPassword: true,
-        showButtonIcon: 'pi pi-eye',
-        copyButtonIcon: 'pi pi-copy',
-        serviceDetailsVisible: false,
-        items: [
-          {
-            label: 'Generate',
-            icon: 'pi pi-fw pi-external-link',
-            command: this.handleGeneratePassword
-          },
-          {
-            label: 'Show Password',
-            icon: 'pi pi-fw pi-eye',
-            command: this.handleChangeInputType
-          },
-          {
-            label: 'Copy',
-            icon: 'pi pi-fw pi-copy',
-            command: this.handleCopyToClipboard
-          },
-          {
-            label: 'Edit',
-            icon: 'pi pi-fw pi-cog',
-            command: this.handleDialogShow
-          },
-          {
-            separator: true
-          },
-          {
-            label: 'Delete',
-            icon: 'pi pi-fw pi-times',
-            command: this.props.isOfflineMode ? this.handleDeleteServiceOffline : this.handleDeleteService
-          }
-        ]
-      };
+    this.state = {
+      password: '',
+      inputType: 'password',
+      inputTypeIsPassword: true,
+      showButtonIcon: 'pi pi-eye',
+      copyButtonIcon: 'pi pi-copy',
+      isFavorite: this.props.service.isFavorite,
+      favoriteButtonIcon: this.props.service.isFavorite ? 'pi pi-star' : 'pi pi-star-o',
+      serviceDetailsVisible: false
     }
+
+    // TODO: remove if, currently not used for anything
+    // if (this.props.service.url) {
+    //   this.state = {
+    //     password: '',
+    //     inputType: 'password',
+    //     inputTypeIsPassword: true,
+    //     showButtonIcon: 'pi pi-eye',
+    //     copyButtonIcon: 'pi pi-copy',
+    //     favoriteButtonIcon: this.props.isFavorite ? '' : '',
+    //     serviceDetailsVisible: false,
+    //     isFavorite: false,
+    //     items: [
+    //       {
+    //         label: 'Generate',
+    //         icon: 'pi pi-fw pi-external-link',
+    //         command: this.handleGeneratePassword
+    //       },
+    //       {
+    //         label: 'Show Password',
+    //         icon: 'pi pi-fw pi-eye',
+    //         command: this.handleChangeInputType
+    //       },
+    //       {
+    //         label: 'Copy',
+    //         icon: 'pi pi-fw pi-copy',
+    //         command: this.handleCopyToClipboard
+    //       },
+    //       {
+    //         label: 'Open URL',
+    //         icon: 'pi pi-fw pi-external-link',
+    //         command: this.handleOpenURL
+    //       },
+    //       {
+    //         label: 'Edit',
+    //         icon: 'pi pi-fw pi-cog',
+    //         command: this.handleDialogShow
+    //       },
+    //       {
+    //         separator: true
+    //       },
+    //       {
+    //         label: 'Delete',
+    //         icon: 'pi pi-fw pi-times',
+    //         command: this.props.isOfflineMode ? this.handleDeleteServiceOffline : this.handleDeleteService
+    //       },
+    //       {
+    //         label: 'Favorite',
+    //         icon: 'pi pi-star-o',
+    //         command: this.makeFavorite
+    //       }
+    //     ]
+    //   };
+    // } else {
+    //   this.state = {
+    //     password: '',
+    //     inputType: 'password',
+    //     inputTypeIsPassword: true,
+    //     showButtonIcon: 'pi pi-eye',
+    //     copyButtonIcon: 'pi pi-copy',
+    //     favoriteButtonIcon: 'pi pi-star-o',
+    //     serviceDetailsVisible: false,
+    //     isFavorite: false,
+    //     items: [
+    //       {
+    //         label: 'Generate',
+    //         icon: 'pi pi-fw pi-external-link',
+    //         command: this.handleGeneratePassword
+    //       },
+    //       {
+    //         label: 'Show Password',
+    //         icon: 'pi pi-fw pi-eye',
+    //         command: this.handleChangeInputType
+    //       },
+    //       {
+    //         label: 'Copy',
+    //         icon: 'pi pi-fw pi-copy',
+    //         command: this.handleCopyToClipboard
+    //       },
+    //       {
+    //         label: 'Edit',
+    //         icon: 'pi pi-fw pi-cog',
+    //         command: this.handleDialogShow
+    //       },
+    //       {
+    //         separator: true
+    //       },
+    //       {
+    //         label: 'Delete',
+    //         icon: 'pi pi-fw pi-times',
+    //         command: this.props.isOfflineMode ? this.handleDeleteServiceOffline : this.handleDeleteService
+    //       },
+    //       {
+    //         label: 'Favorite',
+    //         icon: 'pi pi-star-o',
+    //         command: this.makeFavorite
+    //       }
+    //     ]
+    //   };
+    // }
   }
 
   handleDialogShow = () => {
@@ -187,22 +213,82 @@ class ServiceCard extends React.Component {
   }
 
   handleCopyToClipboard = () => {
-      const el = document.createElement('textarea');
-      el.value = this.state.password;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
+    const el = document.createElement('textarea');
+    el.value = this.state.password;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
   }
 
   handleClearPassword = () => {
     this.setState({ password: '' })
   }
 
+  // TODO: Online changeService
+  makeFavorite = async () => {
+    try {
+      if (this.state.isFavorite) {
+        this.setState({ isFavorite: false })
+        this.setState({ favoriteButtonIcon: 'pi pi-star-o' })
+        this.props.service.isFavorite = false
+      } else {
+        this.setState({ isFavorite: true })
+        this.setState({ favoriteButtonIcon: 'pi pi-star' })
+        this.props.service.isFavorite = true
+      }
+
+      
+      if (this.props.isOfflineMode) {
+        await storeService(this.props.service)
+        this.props.changeService(this.props.service)
+        this.props.showMessage({ severity: 'success', summary: 'Success', detail: 'Service changed!' });
+      } else {
+        const response = await this.sendSaveRequest(false);
+
+        if (response && response.saved) {
+          this.props.changeService(this.props.service)
+          this.props.showMessage({ severity: 'success', summary: 'Success', detail: 'Service changed!' });
+        }
+      }
+    } catch (error) {
+      this.props.showMessage({ severity: 'error', summary: 'Error', detail: 'Service could not be changed!' });
+      console.error(error)
+    }
+  }
+
+  // TODO: create utility file
+  sendSaveRequest = async (newService) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await axios.post(
+          process.env.NODE_ENV === 'production' ? '/service/save' : 'http://localhost:4500/service/save',
+          {
+            username: this.props.username,
+            ...this.state,
+            newService: newService,
+            clientSessionProof: this.props.clientSessionProof
+          },
+          { headers: { 'Content-Type': 'application/json' } }
+        )
+
+        if (response && response.data && response.data.saved) {
+          resolve(response.data);
+        } else {
+          reject();
+        }
+      } catch (e) {
+        reject();
+      }
+    });
+  }
+
   footer = <span>
-    <Button icon="pi pi-cog" style={{ marginRight: '.25em' }} onClick={this.handleDialogShow} tooltip="Edit Service"  tooltipOptions={defaultTooltipOptions} />
-    <Button icon="pi pi-trash" className="p-button-secondary" onClick={this.props.isOfflineMode ? this.handleDeleteServiceOffline : this.handleDeleteService} 
+    <Button icon="pi pi-cog" style={{ marginRight: '.25em' }} onClick={this.handleDialogShow} tooltip="Edit Service" tooltipOptions={defaultTooltipOptions} />
+    <Button icon="pi pi-trash" className="p-button-secondary" onClick={this.props.isOfflineMode ? this.handleDeleteServiceOffline : this.handleDeleteService}
       tooltip="Delete Service" tooltipOptions={defaultTooltipOptions} />
+    {/* <Button icon="pi pi-star-o" className="p-button-secondary" onClick={() => console.log(this.state)} /> */}
+
   </span>;
 
   render() {
@@ -216,10 +302,11 @@ class ServiceCard extends React.Component {
           <InputText readOnly className="service-password-input-text" type={this.state.inputType} value={this.state.password} />
           <div className="service-card-button-container">
             <Button label="Generate" onClick={this.handleGeneratePassword} />
-            <Button icon={this.state.showButtonIcon} onClick={this.handleChangeInputType} tooltip={this.state.inputTypeIsPassword ? 'Show Password' : 'Hide Password'} 
+            <Button icon={this.state.showButtonIcon} onClick={this.handleChangeInputType} tooltip={this.state.inputTypeIsPassword ? 'Show Password' : 'Hide Password'}
               tooltipOptions={defaultTooltipOptions} />
             <Button icon={this.state.copyButtonIcon} onClick={this.handleCopyToClipboard} tooltip={'Copy Password'} tooltipOptions={defaultTooltipOptions} />
             <Button icon="pi pi-times" onClick={this.handleClearPassword} tooltip={'Clear Password'} tooltipOptions={defaultTooltipOptions} />
+            <Button icon={this.state.favoriteButtonIcon} className="p-button-secondary" onClick={this.makeFavorite} />
           </div>
         </Card>
         <ContextMenu model={this.state.items} ref={el => this.cm = el}></ContextMenu>
@@ -255,6 +342,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     deleteService: service => dispatch(deleteService(service)),
+    changeService: service => dispatch(changeService(service)),
     showMessage: content => dispatch(showMessage(content))
   }
 }

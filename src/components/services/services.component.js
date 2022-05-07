@@ -26,12 +26,23 @@ class Services extends React.Component {
     return (
       <div className="services">
         <ControlBar handleDialogShow={this.handleDialogShow} />
-        <div className="servicesList">
+        { (this.props.favoriteServices.length > 0) ?
+            <h2 className="list-heading">Favorites</h2> : ''
+        }
+        <div className="services-list">
+          {this.props.favoriteServices.map((service) => (
+            <div className="service" key={service}><ServiceCard id={service} /></div>
+            ))}
+        </div>
+        { (this.props.services.length > 0) ? 
+          <h2 className="list-heading">Services</h2> : ''
+        }
+        <div className="services-list">
           {this.props.services.map((service) => (
             <div className="service" key={service}><ServiceCard id={service} /></div>
           ))}
         </div>
-        {(this.state.serviceDetailsVisible) ? /* Conditional rendering of the Dialog */
+        { (this.state.serviceDetailsVisible) ? /* Conditional rendering of the Dialog */
           <Dialog header="Add Service" blockScroll={false} visible={this.state.serviceDetailsVisible} modal={true} onHide={this.handleDialogHide}>
             <ServiceDetails newService={true} handleDialogHide={this.handleDialogHide} />
           </Dialog>
@@ -42,11 +53,18 @@ class Services extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  let services = [];
+  let favoriteServices = []
+  let services = []
   for (const service of state.displayedServices) {
-    services.push(service.id);
+    if (service.isFavorite) {
+      favoriteServices.push(service.id)
+    } else {
+      services.push(service.id)
+    }
   }
+
   return {
+    favoriteServices,
     services
   }
 }
@@ -54,7 +72,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 
   return {
-    deleteService: service => dispatch(deleteService(service))
+    deleteService: service => dispatch(deleteService(service)) // TODO: check whether neccessary or not
   }
 }
 

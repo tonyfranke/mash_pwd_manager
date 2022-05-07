@@ -55,21 +55,26 @@ function rootReducer(state = initState, action) {
     case CHANGE_SERVICE:
       user = { ...state.user };
       services = [...state.services];
+      displayedServices = []
       displayedServices = [...state.displayedServices];
       messages = { ...state.messages };
-      for (let i = 0; i < services.length; i++) {
-        if (services[i].id === action.payload.id) {
-          services[i] = action.payload;
-          displayedServices[i] = action.payload
-          return {
-            user,
-            services,
-            displayedServices,
-            messages
-          }
-        }
+      
+      let service = services.find((service) => {
+        return service.id === action.payload.id
+      })
+      service = action.payload
+      
+      let displayedService = displayedServices.find((service) => {
+        return service.id === action.payload.id
+      })
+      displayedService = action.payload
+
+      return {
+        user,
+        services,
+        displayedServices,
+        messages
       }
-      break;
 
     case DELETE_SERVICE:
       user = { ...state.user };
