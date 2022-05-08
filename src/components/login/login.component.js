@@ -36,7 +36,7 @@ class Login extends React.Component {
         const clientEphemeral = srp.generateEphemeral()
 
         const responseStepOne = await axios.post(
-          process.env.NODE_ENV === 'production' ? '/login' : 'http://localhost/login',
+          process.env.NODE_ENV === 'production' ? '/login' : 'http://localhost:4500/login',
           {
             step: '1',
             username: this.state.username,
@@ -51,7 +51,7 @@ class Login extends React.Component {
           const clientSession = srp.deriveSession(clientEphemeral.secret, responseStepOne.data.serverEphemeral, responseStepOne.data.salt, this.state.username, key.toString('hex'));
 
           const responseStepTwo = await axios.post(
-            process.env.NODE_ENV === 'production' ? '/login' : 'http://localhost/login',
+            process.env.NODE_ENV === 'production' ? '/login' : 'http://localhost:4500/login',
             {
               step: '2',
               username: this.state.username,

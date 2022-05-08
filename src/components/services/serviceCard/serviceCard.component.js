@@ -164,9 +164,10 @@ class ServiceCard extends React.Component {
           newService: false,
           clientSessionProof: this.props.clientSessionProof
         }
-        const response = await sendPostRequest('/service/save', body);
+        const responseData = await sendPostRequest('/service/save', body);
+        console.log(responseData)
 
-        if (response && response.data && response.data.saved) {
+        if (responseData && responseData.saved) {
           this.props.changeService(this.props.service)
           this.props.showMessage({ severity: 'success', summary: 'Success', detail: 'Service changed!' });
         }

@@ -119,6 +119,7 @@ function rootReducer(state = initState, action) {
       };
 
     case FILTER_SERVICES:
+      console.log(action.payload)
       user = { ...state.user };
       services = [...state.services];
       displayedServices = action.payload;

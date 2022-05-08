@@ -55,7 +55,7 @@ module.exports = class ServicesController {
                         if (rows) {
                             res.json({
                                 status: 200,
-                                sucess: true,
+                                success: true,
                                 saved: true,
                                 id: req.body.id
                             });

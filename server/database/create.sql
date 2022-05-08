@@ -19,6 +19,7 @@ CREATE TABLE pwd_parameter (
     uppercase BOOLEAN NOT NULL,
     numbers BOOLEAN NOT NULL,
     specialChars BOOLEAN NOT NULL,
+    isFavorite BOOLEAN DEFAULT false,
     blacklist varchar(255),
     PRIMARY KEY (user_id, id),
     FOREIGN KEY (user_id) REFERENCES user(id) 

@@ -8,10 +8,6 @@ import { sendPostRequest } from '../../../utilities/request.service'
 
 class ServiceDelete extends React.Component {
 
-  hideDialog = () => {
-    this.props.handleDialogHide()
-  }
-
   handleDeleteService = async () => {
     try {
       if (this.props.isOfflineMode) {
@@ -27,10 +23,11 @@ class ServiceDelete extends React.Component {
           clientSessionProof: this.props.clientSessionProof
         }
 
-        const response = await sendPostRequest('/service/delete', body);
+        const responseData = await sendPostRequest('/service/delete', body);
         
-        if (response && response.data && response.data.deleted) {
+        if (responseData && responseData.deleted) {
           this.props.deleteService(this.props.service);
+          this.props.handleDialogHide()
           this.props.showMessage({ severity: 'success', summary: 'Sucess', detail: 'Service deleted.' });
         }
       }
@@ -44,7 +41,7 @@ class ServiceDelete extends React.Component {
       <div className="service-delete-dialog">
         <p>Are you sure you want to delete this service?</p>
         <Button label='Yes' className='p-button-primary button-response' onClick={this.handleDeleteService} />
-        <Button label='No' className='p-button-primary button-response' onClick={this.hideDialog} />
+        <Button label='No' className='p-button-primary button-response' onClick={this.props.handleDialogHide} />
       </div>
     )
   }

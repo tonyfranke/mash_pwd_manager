@@ -34,12 +34,23 @@ class ControlBar extends React.Component {
   handleInputTextChanges = (e) => {
     this.setState({ keyword: e.target.value }, () => {
       let displayedServices = [];
-      for (const service of this.props.services) {
-        if (service.name.includes(this.state.keyword)) {
-          displayedServices.push(service);
+      
+      if (this.state.keyword == '') {
+        displayedServices = this.props.services
+      } else {
+        for (const service of this.props.services) {
+          let serviceName = service.name.toLowerCase()
+          let key = this.state.keyword.toLowerCase()
+          if (serviceName.includes(key)) {
+            displayedServices.push(service);
+          }
         }
       }
+
       this.props.filterServices(displayedServices);
+      this.setState({ sortDir: this.state.sortDir * -1 }, () => { // setState runs async, therefore we have to wait for the state to be change before sorting
+        this.sortDisplayedServices()
+      })
     });
   }
 
@@ -53,44 +64,34 @@ class ControlBar extends React.Component {
       this.props.showMessage({ severity: 'error', summary: 'Upload failed!', detail: 'Invalid file type. Please upload a JSON-File.' });
       return;
     }
+
     try {
       let services = await readFile(this.fileUploadInput.current.files[0]);
       delete services[0].id
-      for (const service of services) {
-        // send request to server
-        const response = await sendPostRequest(process.env.NODE_ENV === 'production' ? '/service/save' : 'http://localhost:4500/service/save',
-          {
+      if (this.props.isOfflineMode) {
+        for (const service of services) {
+          delete service.id
+          const id = await storeService(service);
+          service.id = id;
+          this.props.addService(service);
+        }
+      } else {
+
+        for (const service of services) {
+          let body = {
             username: this.props.username,
             ...service,
             newService: true,
             clientSessionProof: this.props.clientSessionProof
-          })
+          }
 
-        if (response && response.id) {
-          service.id = response.id;
-          this.props.addService(service);
+          const responseData = await sendPostRequest('/service/save', body)
+
+          if (responseData && responseData.id) {
+            service.id = responseData.id;
+            this.props.addService(service);
+          }
         }
-      }
-      this.fileUploadInput.current.value = null;
-      this.props.showMessage({ severity: 'success', summary: 'Import complete.', detail: 'Services import successful.' });
-    } catch (e) {
-      this.props.showMessage({ severity: 'error', summary: 'Upload failed!', detail: 'File could not be read.' });
-    }
-  }
-
-  importOffline = async () => {
-    if (!this.fileUploadInput.current.files[0] || this.fileUploadInput.current.files[0].type !== 'application/json') {
-      this.props.showMessage({ severity: 'error', summary: 'Upload failed!', detail: 'Invalid file type. Please upload a JSON-File.' });
-      return;
-    }
-    try {
-      let services = await readFile(this.fileUploadInput.current.files[0]);
-      delete services[0].id
-      for (const service of services) {
-        delete service.id
-        const id = await storeService(service);
-        service.id = id;
-        this.props.addService(service);
       }
       this.fileUploadInput.current.value = null;
       this.props.showMessage({ severity: 'success', summary: 'Import complete.', detail: 'Services import successful.' });
@@ -108,10 +109,10 @@ class ControlBar extends React.Component {
   sortDisplayedServices = () => {
     if (this.state.sortDir === 0 || this.state.sortDir === -1) {
       this.props.sortServices(1)
-      this.state.setState({ sortDir: 1 })
+      this.setState({ sortDir: 1 })
     } else if (this.state.sortDir === 1) {
       this.props.sortServices(-1)
-      this.state.setState({ sortDir: -1 })
+      this.setState({ sortDir: -1 })
     }
   }
 
@@ -137,7 +138,7 @@ class ControlBar extends React.Component {
           <div className="col-8 col-sm-8 col-md-8 col-lg-6 col-xl-3 control-bar-content">
             <Button className="p-button-secondary button-add" icon="pi pi-plus" onClick={this.props.handleDialogShow}
               tooltip="Add Service" tooltipOptions={defaultTooltipOptions} />
-            <input ref={this.fileUploadInput} id="fileUpload" type="file" accept="application/json" onChange={this.props.isOfflineMode ? this.importOffline : this.import} hidden />
+            <input ref={this.fileUploadInput} id="fileUpload" type="file" accept="application/json" onChange={this.import} hidden />
             <div className="p-inputgroup control-bar-search">
               <span className="p-inputgroup-addon"><i className="pi pi-search"></i></span>
               <InputText type="text" value={this.state.keyword} name="keyword" onChange={this.handleInputTextChanges} placeholder="Keyword" />

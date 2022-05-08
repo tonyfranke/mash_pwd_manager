@@ -12,7 +12,7 @@ export function readFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     
-    reader.readAsBinaryString(file);
+    reader.readAsText(file, 'utf-8');
     reader.onload = () => {
       const fileContent = reader.result;
       resolve(JSON.parse(fileContent));
