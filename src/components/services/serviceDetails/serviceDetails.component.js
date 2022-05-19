@@ -106,9 +106,9 @@ class ServiceDetails extends React.Component {
             this.props.changeService(this.state);
             this.props.showMessage({ severity: 'success', summary: 'Success', detail: 'Service changed!' });
           }
-          this.props.handleDialogHide();
         }
       }
+      this.props.handleDialogHide();
     } catch (e) {
       this.props.showMessage({ severity: 'error', summary: 'Error', detail: 'Service could not be added!' });
     }

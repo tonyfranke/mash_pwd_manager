@@ -9,7 +9,7 @@ import Imprint from './imprint/imprint.component';
 import Timer from '../components/timer/timer.component';
 import User from '../components/user/user.component';
 import { connect } from 'react-redux';
-import { Growl } from 'primereact/growl';
+import { Growl } from 'primereact/growl'
 
 
 class App extends React.Component {
@@ -26,6 +26,7 @@ class App extends React.Component {
         <Timer />
         <Header />
         <Growl ref={(el) => { this.growl = el; }}></Growl>
+
         <main className="content">
           <Route exact path="/" component={Home} />
           <Route path="/imprint" component={Imprint} />

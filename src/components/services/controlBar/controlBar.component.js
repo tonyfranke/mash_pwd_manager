@@ -23,6 +23,7 @@ class ControlBar extends React.Component {
     }
   }
 
+  // TODO: deprecated, needs to be fixed
   componentDidMount() {
     document.addEventListener('mousedown', this.handleClickOutsideDropdown);
   }
@@ -35,7 +36,7 @@ class ControlBar extends React.Component {
     this.setState({ keyword: e.target.value }, () => {
       let displayedServices = [];
       
-      if (this.state.keyword == '') {
+      if (this.state.keyword === '') {
         displayedServices = this.props.services
       } else {
         for (const service of this.props.services) {
@@ -135,14 +136,10 @@ class ControlBar extends React.Component {
     return (
       <div className="control-bar">
         <div className="row justify-content-center control-bar-row">
-          <div className="col-8 col-sm-8 col-md-8 col-lg-6 col-xl-3 control-bar-content">
+          <div className="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-3 control-bar-content">
             <Button className="p-button-secondary button-add" icon="pi pi-plus" onClick={this.props.handleDialogShow}
               tooltip="Add Service" tooltipOptions={defaultTooltipOptions} />
-            <input ref={this.fileUploadInput} id="fileUpload" type="file" accept="application/json" onChange={this.import} hidden />
-            <div className="p-inputgroup control-bar-search">
-              <span className="p-inputgroup-addon"><i className="pi pi-search"></i></span>
-              <InputText type="text" value={this.state.keyword} name="keyword" onChange={this.handleInputTextChanges} placeholder="Keyword" />
-            </div>
+
             <Button icon="pi pi-sort-alt" className="p-button-secondary dropdown-button" onClick={this.sortDisplayedServices} />
             <div className="dropdown">
               <Button icon="pi pi-arrow-down" className="p-button-secondary dropdown-button" onClick={this.toggleDropdownMenu} />
@@ -152,6 +149,11 @@ class ControlBar extends React.Component {
                 <Button label="Export" className="p-button-secondary dropdown-content-item" icon="pi pi-download" onClick={this.export}
                   tooltip="Exports all Services to a JSON-File" tooltipOptions={defaultTooltipOptions} />
               </div>
+            </div>
+            <input ref={this.fileUploadInput} id="fileUpload" type="file" accept="application/json" onChange={this.import} hidden />
+            <div className="p-inputgroup control-bar-search">
+              <span className="p-inputgroup-addon"><i className="pi pi-search"></i></span>
+              <InputText type="text" value={this.state.keyword} name="keyword" onChange={this.handleInputTextChanges} placeholder="Keyword" />
             </div>
           </div>
         </div>

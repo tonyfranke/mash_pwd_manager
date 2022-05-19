@@ -26,27 +26,27 @@ class Services extends React.Component {
     return (
       <div className="services">
         <ControlBar handleDialogShow={this.handleDialogShow} />
-        { (this.props.favoriteServices.length > 0) ?
+          {(this.props.favoriteServices.length > 0) ?
             <h2 className="list-heading">Favorites</h2> : ''
-        }
-        <div className="services-list">
-          {this.props.favoriteServices.map((service) => (
-            <div className="service" key={service}><ServiceCard id={service} /></div>
+          }
+          <div className="services-list">
+            {this.props.favoriteServices.map((service) => (
+              <div className="service" key={service}><ServiceCard id={service} /></div>
             ))}
-        </div>
-        { (this.props.services.length > 0) ? 
-          <h2 className="list-heading">Services</h2> : ''
-        }
-        <div className="services-list">
-          {this.props.services.map((service) => (
-            <div className="service" key={service}><ServiceCard id={service} /></div>
-          ))}
-        </div>
-        { (this.state.serviceDetailsVisible) ? /* Conditional rendering of the Dialog */
-          <Dialog header="Add Service" blockScroll={false} visible={this.state.serviceDetailsVisible} modal={true} onHide={this.handleDialogHide}>
-            <ServiceDetails newService={true} handleDialogHide={this.handleDialogHide} />
-          </Dialog>
-        : ''}
+          </div>
+          {(this.props.services.length > 0) ?
+            <h2 className="list-heading">Services</h2> : ''
+          }
+          <div className="services-list">
+            {this.props.services.map((service) => (
+              <div className="service" key={service}><ServiceCard id={service} /></div>
+            ))}
+          </div>
+          {(this.state.serviceDetailsVisible) ? /* Conditional rendering of the Dialog */
+            <Dialog header="Add Service" blockScroll={false} visible={this.state.serviceDetailsVisible} modal={true} onHide={this.handleDialogHide}>
+              <ServiceDetails newService={true} handleDialogHide={this.handleDialogHide} />
+            </Dialog>
+            : ''}
       </div>
     );
   }
